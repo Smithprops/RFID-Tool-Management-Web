@@ -128,6 +128,27 @@ def admin_panel():
 
     return render_template("admin.html", users=users, tools=tools, logout_time=logout_time)
 
+# ---------------- ADMIN LOGIN ----------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Admin login page."""
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        admin = conn.execute("SELECT * FROM admins WHERE username = ?", (username,)).fetchone()
+        conn.close()
+
+        if admin and bcrypt.checkpw(password.encode("utf-8"), admin["password"]):
+            session["admin"] = True
+            return redirect(url_for("admin_panel"))
+
+        return "Invalid credentials", 401
+
+    return render_template("login.html")
+
+
 
 # ---------------- ADD USER ----------------
 @app.route("/add_user_route", methods=["POST"])
