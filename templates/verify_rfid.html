@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+    <h1 class="text-center">Scan Your RFID to Proceed</h1>
+
+    <form method="POST">
+        <label>RFID Tag:</label>
+        <input type="text" name="rfid" id="rfid" class="form-control" autofocus required>
+
+        <button type="submit" class="btn btn-primary mt-3 w-100">Verify</button>
+    </form>
+
+    <script>
+        window.onload = function () {
+            document.getElementById("rfid").focus();
+        };
+    </script>
+</body>
+</html>

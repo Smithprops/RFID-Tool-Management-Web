@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Checkout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        let logoutTime = {{ logout_time }};
+        let logoutTimer;
+
+        function updateCountdown() {
+            document.getElementById("countdown").innerText = logoutTime;
+        }
+
+        function resetTimer() {
+            clearTimeout(logoutTimer);
+            logoutTime = {{ logout_time }};
+            updateCountdown();
+            logoutTimer = setInterval(() => {
+                logoutTime--;
+                updateCountdown();
+                if (logoutTime <= 0) {
+                    window.location.href = "/user_logout";
+                }
+            }, 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCountdown();
+            resetTimer();
+
+            document.addEventListener("mousemove", resetTimer);
+            document.addEventListener("keypress", resetTimer);
+        });
+
+        async function confirmCheckout() {
+            let barcodeInput = document.getElementById("barcode").value.trim();
+
+            if (barcodeInput.length < 4) {
+                alert("Invalid barcode. Please scan again.");
+                return;
+            }
+
+            let response = await fetch("/scan_tool", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ barcode: barcodeInput })
+            });
+
+            let result = await response.json();
+
+            if (response.ok) {
+                alert(result.message);
+            } else {
+                alert("Error: " + (result.error || "Unknown error"));
+            }
+        }
+
+        async function returnTool() {
+            let barcodeInput = document.getElementById("barcode").value.trim();
+
+            if (barcodeInput.length < 4) {
+                alert("Invalid barcode. Please scan again.");
+                return;
+            }
+
+            let response = await fetch("/return_tool", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ barcode: barcodeInput })
+            });
+
+            let result = await response.json();
+
+            if (response.ok) {
+                alert(result.message);
+            } else {
+                alert("Error: " + (result.error || "Unknown error"));
+            }
+        }
+    </script>
+</head>
+<body class="container mt-4">
+    <h1 class="text-center">Tool Checkout</h1>
+    
+    <p><strong>Logged in as:</strong> {{ user_name }}</p>
+    <p><strong>RFID Tag:</strong> {{ user_rfid }}</p>
+    <p><strong>Auto Logout in:</strong> <span id="countdown"></span> seconds</p>
+
+    <form id="checkoutForm">
+        <label>Tool Barcode:</label>
+        <input type="text" id="barcode" class="form-control" autofocus required>
+
+        <button type="button" onclick="confirmCheckout()" class="btn btn-primary mt-3 w-100">Confirm Checkout</button>
+        <button type="button" onclick="returnTool()" class="btn btn-warning mt-3 w-100">Return Tool</button>
+    </form>
+
+    <button onclick="window.location.href='/user_logout'" class="btn btn-danger mt-3 w-100">Logout</button>
+
+</body>
+</html>

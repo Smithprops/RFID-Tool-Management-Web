@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+    <h1 class="text-center">Admin Panel</h1>
+
+    <a href="{{ url_for('logs') }}" class="btn btn-secondary mb-3">View Logs</a>
+    <a href="{{ url_for('user_logout') }}" class="btn btn-danger mb-3 float-end">Logout</a>
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="users-tab" href="#">Manage Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="tools-tab" href="#">Manage Tools</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="settings-tab" href="#">Admin Settings</a>
+        </li>
+    </ul>
+
+    <!-- Users Section -->
+    <div id="users-section" class="mt-4">
+        <h2>Existing Users</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>RFID Tag</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.rfid_tag }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete_user_route') }}" onsubmit="return confirmDelete('user');">
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Add User</h2>
+        <form method="POST" action="{{ url_for('add_user_route') }}">
+            <label>User Name:</label>
+            <input type="text" name="name" class="form-control" required>
+
+            <label>RFID Tag:</label>
+            <input type="text" name="rfid_tag" class="form-control" required>
+
+            <button type="submit" class="btn btn-success mt-3">Add User</button>
+        </form>
+    </div>
+
+    <!-- Tools Section -->
+    <div id="tools-section" class="mt-4" style="display: none;">
+        <h2>Existing Tools</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tool Name</th>
+                    <th>Barcode</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tool in tools %}
+                <tr>
+                    <td>{{ tool.id }}</td>
+                    <td>{{ tool.name }}</td>
+                    <td>{{ tool.barcode }}</td>
+                    <td>{{ tool.quantity }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete_tool_route') }}" onsubmit="return confirmDelete('tool');">
+                            <input type="hidden" name="tool_id" value="{{ tool.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2 class="mt-4">Add Tool</h2>
+        <form method="POST" action="{{ url_for('add_tool_route') }}">
+            <label>Tool Name:</label>
+            <input type="text" name="name" class="form-control" required>
+
+            <label>Barcode:</label>
+            <input type="text" name="barcode" class="form-control" required>
+
+            <label>Quantity:</label>
+            <input type="number" name="quantity" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary mt-3">Add Tool</button>
+        </form>
+    </div>
+
+    <!-- Admin Settings Section -->
+    <div id="settings-section" class="mt-4" style="display: none;">
+        <h2>Admin Settings</h2>
+        <form id="passwordChangeForm">
+            <label>New Password:</label>
+            <input type="password" id="newPassword" class="form-control" required>
+
+            <button type="submit" class="btn btn-warning mt-2">Update Password</button>
+        </form>
+
+        <h2 class="mt-4">Auto-Logout Timer</h2>
+        <form method="POST" action="{{ url_for('update_logout_time_route') }}">
+            <label>Set Auto-Logout Time (seconds):</label>
+            <input type="number" name="logout_time" class="form-control" value="{{ logout_time }}" required>
+            <button type="submit" class="btn btn-info mt-2">Update Logout Time</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("users-tab").addEventListener("click", function() {
+            showSection("users-section");
+        });
+
+        document.getElementById("tools-tab").addEventListener("click", function() {
+            showSection("tools-section");
+        });
+
+        document.getElementById("settings-tab").addEventListener("click", function() {
+            showSection("settings-section");
+        });
+
+        function showSection(sectionId) {
+            document.getElementById("users-section").style.display = "none";
+            document.getElementById("tools-section").style.display = "none";
+            document.getElementById("settings-section").style.display = "none";
+
+            document.getElementById(sectionId).style.display = "block";
+
+            document.querySelectorAll(".nav-link").forEach(tab => tab.classList.remove("active"));
+            document.querySelector(`#${sectionId.replace('-section', '-tab')}`).classList.add("active");
+        }
+
+        function confirmDelete(type) {
+            return confirm(`Are you sure you want to delete this ${type}?`);
+        }
+
+        document.getElementById("passwordChangeForm").onsubmit = async function (event) {
+            event.preventDefault();
+            let newPassword = document.getElementById("newPassword").value;
+            let response = await fetch("/update_admin_password", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ new_password: newPassword })
+            });
+
+            let result = await response.json();
+            alert(result.message);
+        };
+    </script>
+</body>
+</html>
