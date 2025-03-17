@@ -1,0 +1,16 @@
+<h2>Manage Tools</h2>
+<div id="tools-container">Loading tools...</div>
+
+<script>
+fetch('/api/tools')
+  .then(res => res.json())
+  .then(tools => {
+    const container = document.getElementById('tools-container');
+    container.innerHTML = `
+      <ul>
+        ${tools.map(tool => `<li>${tool.name} (Quantity: ${tool.quantity})</li>`).join('')}
+      </ul>
+    `;
+  })
+  .catch(err => container.innerHTML = "Failed to load tools.");
+</script>

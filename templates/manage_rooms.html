@@ -1,0 +1,17 @@
+<h2>Manage Rooms</h2>
+<div id="rooms-container">Loading rooms...</div>
+
+<script>
+fetch('/api/rooms')
+  .then(res => res.json())
+  .then(rooms => {
+    const container = document.getElementById('rooms-container');
+    container.innerHTML = `
+      <ul>
+        ${rooms.map(room => `<li>${room.name}: ${room.description}</li>`).join('')}
+      </ul>
+    `;
+  })
+  .catch(err => container.innerHTML = "Failed to load rooms.");
+</script>
+

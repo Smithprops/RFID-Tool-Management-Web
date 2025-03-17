@@ -231,6 +231,45 @@ def update_settings():
 
     return redirect(url_for("admin_panel"))
 
+
+@app.route('/api/tools', methods=['GET'])
+def api_get_tools():
+    tools = Tool.query.all()
+    return jsonify([
+        {'id': tool.id, 'name': tool.name, 'quantity': tool.quantity}
+        for tool in tools
+    ])
+
+@app.route('/api/users', methods=['GET'])
+def api_get_users():
+    users = User.query.all()
+    return jsonify([
+        {'id': user.id, 'name': user.name, 'rfid': user.rfid_tag}
+        for user in users
+    ])
+
+@app.route('/api/rooms', methods=['GET'])
+def api_get_rooms():
+    rooms = Room.query.all()
+    return jsonify([
+        {'id': room.id, 'name': room.name, 'description': room.description}
+        for room in rooms
+    ])
+
+@app.route('/api/checkedout', methods=['GET'])
+def api_get_checkedout():
+    checked_out_items = CheckedOutTool.query.all()
+    return jsonify([
+        {
+            'id': item.id,
+            'tool_name': item.tool.name,
+            'user_name': item.user.name,
+            'checkout_date': item.checkout_date.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for item in checked_out_items
+    ])
+
+
 # ---------------- LOGOUT ----------------
 @app.route('/logout')
 def logout():

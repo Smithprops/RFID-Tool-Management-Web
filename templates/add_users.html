@@ -1,0 +1,16 @@
+<h2>Manage Users</h2>
+<div id="users-container">Loading users...</div>
+
+<script>
+fetch('/api/users')
+  .then(res => res.json())
+  .then(users => {
+    const container = document.getElementById('users-container');
+    container.innerHTML = `
+      <ul>
+        ${users.map(user => `<li>${user.name} (RFID: ${user.rfid})</li>`).join('')}
+      </ul>
+    `;
+  })
+  .catch(err => container.innerHTML = "Failed to load users.");
+</script>

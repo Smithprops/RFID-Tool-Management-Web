@@ -1,0 +1,18 @@
+<h2>Checked Out Tools</h2>
+<div id="checkedout-container">Loading checked-out tools...</div>
+
+<script>
+fetch('/api/checkedout')
+  .then(res => res.json())
+  .then(items => {
+    const container = document.getElementById('checkedout-container');
+    container.innerHTML = `
+      <ul>
+        ${items.map(item => `
+          <li>${item.tool_name} - Checked out by ${item.user_name} on ${item.checkout_date}</li>
+        `).join('')}
+      </ul>
+    `;
+  })
+  .catch(err => container.innerHTML = "Failed to load checked-out tools.");
+</script>
