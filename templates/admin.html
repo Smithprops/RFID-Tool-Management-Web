@@ -9,104 +9,106 @@
     <a href="{{ url_for('logout') }}" class="btn btn-danger mb-3 float-end">Logout</a>
 
     <!-- Navigation Tabs -->
-    <ul class="nav nav-tabs">
-        <li class="nav-item"><a class="nav-link active" data-target="users-section">Manage Users</a></li>
-        <li class="nav-item"><a class="nav-link" data-target="tools-section">Manage Tools</a></li>
-        <li class="nav-item"><a class="nav-link" data-target="checked-out-section">Checked Out Tools</a></li>
-        <li class="nav-item"><a class="nav-link" data-target="rooms-section">Manage Rooms</a></li>
-        <li class="nav-item"><a class="nav-link" data-target="add-users-section">Add Users</a></li>
-        <li class="nav-item"><a class="nav-link" data-target="settings-section">Admin Settings</a></li>
-    </ul>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#users-section" href="#">Manage Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tools-section" href="#">Manage Tools</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#checked-out-section" href="#">Checked Out Tools</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#rooms-section" href="#">Manage Rooms</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#add-users-section" href="#">Add Users</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-section" href="#">Admin Settings</a>
+    </li>
+</ul>
 
-    <!-- Users Section -->
-    <div id="users-section" class="mt-4 section">
-        <h2>Existing Users</h2>
-        <input type="text" id="searchUsers" class="form-control mb-2" placeholder="Search users...">
-        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
 
-        <div class="card">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>RFID Tag</th>
-                        <th>Role</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.rfid_tag }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm edit-user-btn" 
-                                    data-id="{{ user.id }}"
-                                    data-name="{{ user.name }}"
-                                    data-rfid="{{ user.rfid_tag }}"
-                                    data-role="{{ user.role }}">
-                                Edit
-                            </button>
+    <!-- Tab Content -->
+    <div class="tab-content mt-4">
+        <div id="users-section" class="tab-pane fade show active">
+            <h2>Existing Users</h2>
+            <input type="text" id="searchUsers" class="form-control mb-2" placeholder="Search users...">
+            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
 
-                            <form method="POST" action="{{ url_for('delete_user') }}" class="d-inline">
-                                <input type="hidden" name="user_id" value="{{ user.id }}">
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Add User Modal -->
-    <div id="addUserModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add User</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{{ url_for('add_user') }}">
-                        <label>Name:</label>
-                        <input type="text" name="name" class="form-control" required>
-
-                        <label>RFID Tag:</label>
-                        <input type="text" name="rfid_tag" class="form-control" required>
-
-                        <label>Role:</label>
-                        <select name="role" class="form-control">
-                            <option value="admin">Admin</option>
-                            <option value="manager">Manager</option>
-                            <option value="user" selected>User</option>
-                        </select>
-
-                        <button type="submit" class="btn btn-success mt-3">Add User</button>
-                    </form>
-                </div>
+            <div class="card">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>RFID Tag</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.rfid_tag }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm edit-user-btn" 
+                                        data-id="{{ user.id }}"
+                                        data-name="{{ user.name }}"
+                                        data-rfid="{{ user.rfid_tag }}"
+                                        data-role="{{ user.role }}">
+                                    Edit
+                                </button>
+                                <form method="POST" action="{{ url_for('delete_user') }}" class="d-inline">
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
 
-    <!-- Admin Settings Section -->
-    <div id="settings-section" class="mt-4 section" style="display: none;">
-        <h2>Admin Settings</h2>
-        <form method="POST" action="{{ url_for('update_settings') }}">
-            <label>Set Auto-Logout Time (seconds):</label>
-            <input type="number" name="logout_time" class="form-control" value="{{ settings['auto_logout_time'] }}" required>
+        <div id="tools-section" class="tab-pane fade">
+            <h2>Manage Tools</h2>
+            <p>Tool management functionality goes here.</p>
+        </div>
 
-            <label>Auto-Submit Length:</label>
-            <input type="number" name="submit_length" class="form-control" value="{{ settings['auto_submit_length'] }}" required>
+        <div id="checked-out-section" class="tab-pane fade">
+            <h2>Checked Out Tools</h2>
+            <p>View tools currently checked out.</p>
+        </div>
 
-            <button type="submit" class="btn btn-info mt-2">Update Settings</button>
-        </form>
+        <div id="rooms-section" class="tab-pane fade">
+            <h2>Manage Rooms</h2>
+            <p>Room management functionality goes here.</p>
+        </div>
+
+        <div id="add-users-section" class="tab-pane fade">
+            <h2>Add Users</h2>
+            <p>Form for adding new users.</p>
+        </div>
+
+        <div id="settings-section" class="tab-pane fade">
+            <h2>Admin Settings</h2>
+            <form method="POST" action="{{ url_for('update_settings') }}">
+                <label>Set Auto-Logout Time (seconds):</label>
+                <input type="number" name="logout_time" class="form-control" value="{{ settings['auto_logout_time'] }}" required>
+
+                <label>Auto-Submit Length:</label>
+                <input type="number" name="submit_length" class="form-control" value="{{ settings['auto_submit_length'] }}" required>
+
+                <button type="submit" class="btn btn-info mt-2">Update Settings</button>
+            </form>
+        </div>
     </div>
 
 {% endblock %}
+

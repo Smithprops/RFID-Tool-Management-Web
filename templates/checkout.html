@@ -6,7 +6,7 @@
     <h2>Checkout a Tool</h2>
     <p>Session Timeout: <span id="timer">{{ logout_time }}</span> seconds</p>
 
-    <form method="POST" action="{{ url_for('scan_tool') }}">
+    <form method="POST" action="{{ url_for('checkout') }}">
 		<input type="hidden" name="action" value="checkout">
 		<label>Scan Tool Barcode:</label>
 		<input type="text" name="barcode" class="form-control" required>

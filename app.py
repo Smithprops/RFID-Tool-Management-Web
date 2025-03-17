@@ -93,7 +93,18 @@ def checkout_return():
     if "user_id" not in session:
         return redirect(url_for("verify_rfid"))
 
-    return render_template("checkout_return.html", user_name=session["user_name"])
+    logout_time = DEFAULT_AUTO_LOGOUT_TIME  # Default timeout
+
+    # Retrieve logout time from settings if stored in the database
+    conn = get_db_connection()
+    setting = conn.execute("SELECT value FROM settings WHERE key = 'auto_logout_time'").fetchone()
+    conn.close()
+
+    if setting:
+        logout_time = int(setting["value"])
+
+    return render_template("checkout_return.html", user_name=session["user_name"], logout_time=logout_time)
+
 
 # ---------------- CHECKOUT TOOL ----------------
 @app.route("/checkout", methods=["GET", "POST"])
@@ -146,6 +157,23 @@ def add_user():
     conn.execute("INSERT INTO users (name, rfid_tag, role) VALUES (?, ?, ?)", (name, rfid_tag, role))
     conn.commit()
     conn.close()
+
+    return redirect(url_for("admin_panel"))
+
+# ---------------- DELETE USER ----------------
+@app.route("/delete_user", methods=["POST"])
+def delete_user():
+    """Allows an admin to delete a user."""
+    if "role" not in session or session["role"] != "admin":
+        return "Unauthorized", 403
+
+    user_id = request.form.get("user_id")
+
+    if user_id:
+        conn = get_db_connection()
+        conn.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        conn.commit()
+        conn.close()
 
     return redirect(url_for("admin_panel"))
 
@@ -202,6 +230,12 @@ def update_settings():
     conn.close()
 
     return redirect(url_for("admin_panel"))
+
+# ---------------- LOGOUT ----------------
+@app.route('/logout')
+def logout():
+    session.clear()  # Clears the session
+    return redirect(url_for('verify_rfid'))
 
 # ---------------- LOGS PAGE ----------------
 @app.route("/logs")
