@@ -9,27 +9,26 @@
     <a href="{{ url_for('logout') }}" class="btn btn-danger mb-3 float-end">Logout</a>
 
     <!-- Navigation Tabs -->
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#users-section" href="#">Manage Users</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tools-section" href="#">Manage Tools</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#checked-out-section" href="#">Checked Out Tools</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#rooms-section" href="#">Manage Rooms</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#add-users-section" href="#">Add Users</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-section" href="#">Admin Settings</a>
-    </li>
-</ul>
-
+    <ul class="nav nav-tabs" id="adminTabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#users-section" href="#">Manage Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tools-section" href="#">Manage Tools</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#checked-out-section" href="#">Checked Out Tools</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#rooms-section" href="#">Manage Rooms</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#add-users-section" href="#">Add Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#settings-section" href="#">Admin Settings</a>
+        </li>
+    </ul>
 
     <!-- Tab Content -->
     <div class="tab-content mt-4">
@@ -111,4 +110,3 @@
     </div>
 
 {% endblock %}
-

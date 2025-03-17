@@ -270,6 +270,23 @@ def api_get_checkedout():
     ])
 
 
+@app.route('/manage_tools')
+def manage_tools():
+    return render_template('manage_tools.html')
+
+@app.route('/checked_out_tools')
+def checked_out_tools():
+    return render_template('checked_out_tools.html')
+
+@app.route('/manage_rooms')
+def manage_rooms():
+    return render_template('manage_rooms.html')
+
+@app.route('/add_users')
+def add_users():
+    return render_template('add_users.html')
+
+
 # ---------------- LOGOUT ----------------
 @app.route('/logout')
 def logout():

@@ -17,5 +17,26 @@ document.addEventListener("DOMContentLoaded", function () {
             if (targetPane) targetPane.classList.add("show", "active");
         });
     });
-});
 
+    // Ensure all tabs are accessible based on role
+    fetch('/api/user_role')
+        .then(response => response.json())
+        .then(data => {
+            if (data.role !== "admin") {
+                document.getElementById("tools-section")?.remove();
+                document.getElementById("rooms-section")?.remove();
+                document.getElementById("checked-out-section")?.remove();
+                document.getElementById("add-users-section")?.remove();
+            }
+        })
+        .catch(error => console.error('Error fetching user role:', error));
+
+    // Live Search for Users
+    document.getElementById("searchUsers").addEventListener("keyup", function () {
+        let filter = this.value.toLowerCase();
+        document.querySelectorAll("#users-section tbody tr").forEach(row => {
+            let name = row.querySelector("td:nth-child(2)").textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? "" : "none";
+        });
+    });
+});
