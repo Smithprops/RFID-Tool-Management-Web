@@ -1,34 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("registerAdminForm").onsubmit = async function (event) {
-        event.preventDefault();
+    let tabs = document.querySelectorAll(".nav-tabs .nav-link");
+    let contentPanes = document.querySelectorAll(".tab-pane");
 
-        let username = document.getElementById("adminUsername").value;
-        let password = document.getElementById("adminPassword").value;
+    tabs.forEach(tab => {
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
+            let activeTab = document.querySelector(".nav-tabs .nav-link.active");
+            let activePane = document.querySelector(".tab-pane.show.active");
 
-        let response = await fetch("/register_admin", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ username, password })
+            if (activeTab) activeTab.classList.remove("active");
+            if (activePane) activePane.classList.remove("show", "active");
+
+            this.classList.add("active");
+            let targetPane = document.querySelector(this.getAttribute("href"));
+            if (targetPane) targetPane.classList.add("show", "active");
         });
-
-        let result = await response.json();
-        alert(result.message);
-        loadAdmins();
-    };
-
-    async function loadAdmins() {
-        let response = await fetch("/get_admins");
-        let admins = await response.json();
-        let adminList = document.getElementById("adminList");
-        adminList.innerHTML = "";
-
-        admins.forEach(admin => {
-            let listItem = document.createElement("li");
-            listItem.className = "list-group-item";
-            listItem.textContent = `${admin.username}`;
-            adminList.appendChild(listItem);
-        });
-    }
-
-    loadAdmins();
+    });
 });

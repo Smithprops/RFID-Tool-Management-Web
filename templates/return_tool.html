@@ -6,11 +6,11 @@
     <h2>Checkout a Tool</h2>
     <p>Session Timeout: <span id="timer">{{ logout_time }}</span> seconds</p>
 
-    <form method="POST" action="{{ url_for('scan_tool') }}">
-		<input type="hidden" name="action" value="checkout">
+	<form method="POST" action="{{ url_for('scan_tool') }}">
+		<input type="hidden" name="action" value="return">
 		<label>Scan Tool Barcode:</label>
 		<input type="text" name="barcode" class="form-control" required>
-		<button type="submit" class="btn btn-primary mt-3">Submit</button>
+		<button type="submit" class="btn btn-warning mt-3">Submit</button>
 	</form>
 
 
@@ -31,10 +31,10 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const toolImage = document.getElementById("tool-image");
-            const confirmationDiv = document.getElementById("checkout-confirmation");
+            const toolImage = document.getElementById("return-tool-image");
+            const confirmationDiv = document.getElementById("return-confirmation");
             
-            document.getElementById("tool-scan-form").addEventListener("submit", function (event) {
+            document.getElementById("tool-return-form").addEventListener("submit", function (event) {
                 event.preventDefault();
                 confirmationDiv.style.display = "block";
 

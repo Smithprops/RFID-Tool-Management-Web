@@ -6,6 +6,10 @@
 
 {% block content %}
     <h2>Tool Checkout and Return History</h2>
+    
+    <!-- Back Button -->
+    <button onclick="goBack()" class="btn btn-secondary mb-3">⬅ Back</button>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -26,4 +30,12 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        // Back button functionality
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
 {% endblock %}

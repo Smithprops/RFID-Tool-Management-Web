@@ -1,16 +1,47 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan RFID</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #rfid-input {
+            padding: 10px;
+            font-size: 18px;
+            width: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
 
-{% block title %}RFID Verification{% endblock %}
+    <h1>Scan RFID Badge</h1>
+    <input type="text" id="rfid-input" maxlength="6" autofocus>
 
-{% block header %}RFID Verification{% endblock %}
+    <script>
+        document.getElementById("rfid-input").addEventListener("input", function() {
+            if (this.value.length === 6) {
+                fetch("{{ url_for('verify_rfid') }}", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "rfid=" + encodeURIComponent(this.value)
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; // Redirect based on server response
+                    } else {
+                        alert("RFID not recognized. Try again.");
+                        this.value = ""; // Clear input field if unauthorized
+                    }
+                });
+            }
+        });
+    </script>
 
-{% block content %}
-    <div class="card p-4">
-        <p>Please scan your RFID badge to continue.</p>
-        <form method="POST">
-            <label for="rfid">RFID Tag:</label>
-            <input type="text" name="rfid" class="form-control" required>
-            <button type="submit" class="btn btn-primary mt-3">Verify</button>
-        </form>
-    </div>
-{% endblock %}
+</body>
+</html>

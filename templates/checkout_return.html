@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout or Return</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 10px;
+        }
+        .btn-checkout {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-return {
+            background-color: #ffc107;
+            color: black;
+        }
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
+        }
+        .countdown {
+            font-size: 18px;
+            font-weight: bold;
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome, {{ user_name }}</h1>
+    <p>Session Timeout: <span id="countdown">{{ logout_time }}</span> seconds</p>
+
+    <div class="container">
+        <a href="{{ url_for('checkout') }}" class="btn btn-checkout">Checkout Tool</a>
+        <a href="{{ url_for('return_tool') }}" class="btn btn-return">Return Tool</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+    </div>
+
+    <script>
+        let timeLeft = {{ logout_time }};
+        const countdownElement = document.getElementById("countdown");
+
+        function updateCountdown() {
+            timeLeft -= 1;
+            countdownElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                window.location.href = "{{ url_for('logout') }}";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+    </script>
+
+</body>
+</html>
